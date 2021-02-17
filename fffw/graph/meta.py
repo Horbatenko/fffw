@@ -344,12 +344,15 @@ class VideoMeta(Meta):
 
     def validate(self) -> None:
         if self.height != 0:
-            assert abs(self.dar - self.width / self.height * self.par) <= 0.001
+            if abs(self.dar - self.width / self.height * self.par) > 0.001:
+                raise ValueError('Aspect ratio mismatch')
         else:
-            assert str(self.dar) == 'nan'
+            if str(self.dar) != 'nan':
+                raise ValueError('Invalid display aspect ratio value')
 
         interval = float(self.duration - self.start)
-        assert abs(self.frames - interval * self.frame_rate) <= 1
+        if abs(self.frames - interval * self.frame_rate) > 1:
+            raise ValueError('Frame rate mismatch')
 
 
 @dataclass
