@@ -351,7 +351,7 @@ class VideoMeta(Meta):
                 raise ValueError('Invalid display aspect ratio value')
 
         interval = float(self.duration - self.start)
-        if abs(self.frames - interval * self.frame_rate) > 1:
+        if abs(self.frames - interval * self.frame_rate) > 3:
             raise ValueError('Frame rate mismatch')
 
 
