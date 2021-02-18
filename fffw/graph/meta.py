@@ -378,7 +378,7 @@ class AudioMeta(Meta):
 
     def validate(self) -> None:
         interval = float(self.duration - self.start)
-        if abs(self.samples - interval * self.sampling_rate) > 1:
+        if abs(self.samples - interval * self.sampling_rate) > 3:
             raise ValueError('Sampling rate mismatch')
 
 
