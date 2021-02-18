@@ -335,24 +335,9 @@ class VideoMeta(Meta):
     device: Optional[Device]
     """ Hardware device asociated with current stream."""
 
-    def __post_init__(self) -> None:
-        self.validate()
-
     @property
     def kind(self) -> StreamType:
         return VIDEO
-
-    def validate(self) -> None:
-        if self.height != 0:
-            if abs(self.dar - self.width / self.height * self.par) > 0.001:
-                raise ValueError('Aspect ratio mismatch')
-        else:
-            if str(self.dar) != 'nan':
-                raise ValueError('Invalid display aspect ratio value')
-
-        interval = float(self.duration - self.start)
-        if abs(self.frames - interval * self.frame_rate) > 3:
-            raise ValueError('Frame rate mismatch')
 
 
 @dataclass
@@ -369,17 +354,9 @@ class AudioMeta(Meta):
     samples: int
     """ Samples count."""
 
-    def __post_init__(self) -> None:
-        self.validate()
-
     @property
     def kind(self) -> StreamType:
         return AUDIO
-
-    def validate(self) -> None:
-        interval = float(self.duration - self.start)
-        if abs(self.samples - interval * self.sampling_rate) > 3:
-            raise ValueError('Sampling rate mismatch')
 
 
 def audio_meta_data(**kwargs: Any) -> AudioMeta:
