@@ -369,9 +369,17 @@ class AudioMeta(Meta):
     samples: int
     """ Samples count."""
 
+    def __post_init__(self) -> None:
+        self.validate()
+
     @property
     def kind(self) -> StreamType:
         return AUDIO
+
+    def validate(self) -> None:
+        interval = float(self.duration - self.start)
+        if abs(self.samples - interval * self.sampling_rate) > 3:
+            raise ValueError('Sampling rate mismatch')
 
 
 def audio_meta_data(**kwargs: Any) -> AudioMeta:
