@@ -192,8 +192,10 @@ def normalize_args(dst: Union[filters.Filter,
     """
     if isinstance(dst, type):
         # handle filter class + params
-        assert issubclass(dst, filters.Filter), "filter class needed"
-        assert params is not None, "params not specified for filter class"
+        if not issubclass(dst, filters.Filter):
+            raise ValueError('Filter class needed')
+        if params is None:
+            raise ValueError('Params not specified for filter class')
         dst = init_filter_vector(dst, params)
     elif isinstance(dst, filters.Filter):
         # handle filter instance
@@ -207,7 +209,8 @@ def normalize_args(dst: Union[filters.Filter,
         if len(dst) == 1:
             # handle filter instance and mask vector
             dst = Vector(dst * len(mask))
-        assert len(dst) == len(mask)
+        if len(dst) != len(mask):
+            raise ValueError('Vector and mask length mismatch')
     else:
         # handle omitted mask
         mask = [True] * len(dst)

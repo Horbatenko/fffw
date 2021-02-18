@@ -123,7 +123,8 @@ class Params:
                 args.extend((name, str(v)) for v in value)
             elif value is True:
                 # support flag without a value
-                assert name
+                if not name:
+                    raise ValueError('Name is empty')
                 args.append((name, None))
             else:
                 # output parameter name and value converted to string

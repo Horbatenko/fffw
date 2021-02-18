@@ -201,7 +201,8 @@ class FFMPEG(BaseWrapper):
         >>> ff.add_input(Input(input_file="/tmp/input.mp4"))
         >>>
         """
-        assert isinstance(input_file, Input)
+        if not isinstance(input_file, Input):
+            raise ValueError('Illegal input file type')
         self.__inputs.append(input_file)
         return input_file
 

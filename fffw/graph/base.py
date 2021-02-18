@@ -278,8 +278,10 @@ class Node(Traversable, abc.ABC):
     @enabled.setter
     def enabled(self, value: bool) -> None:
         if not value:
-            assert self.input_count == 1
-            assert self.output_count == 1
+            if self.input_count != 1:
+                raise ValueError('Illegal input count value')
+            if self.output_count != 1:
+                raise ValueError('Illegal output count value')
         self.__dict__['enabled'] = value
 
     @property
